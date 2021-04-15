@@ -50,16 +50,18 @@ function loopKeys(newLayer){
             newLayer.position.setValueAtKey(a, [origPos[0]+(xMove*i),origPos[1]+(yMove*i), origPos[2]+(zMove*i)]);        
         }
     }
-    /*if(newLayer.scale.numKeys == 0){
-        var origScale = newLayer.scale.value();
-        newLayer.scale.setValue(origScale*(Scale*i));
+    if(newLayer.scale.numKeys == 0){
+        var origScale = newLayer.scale.value;
+        //alert(Math.pow((.01*Scale), i));
+        newLayer.scale.setValue([origScale[0] * (Math.pow((.01*Scale), i)) , origScale[1] * (Math.pow((.01*Scale), i))]);
     }
     else{
         for(b=1; b<= newLayer.scale.numKeys; b++){
             var origScale = newLayer.scale.keyValue(b);
-            newLayer.scale.setValueAtKey(b, origScale*(Scale*i));        
+            newScale = [origScale[0] * (Math.pow((.01*Scale), i)) , origScale[1] * (Math.pow((.01*Scale), i))];
+            newLayer.scale.setValueAtKey(b, newScale);        
         }
-    }*/
+    }
 }
 myWin.center();
 myWin.show();
