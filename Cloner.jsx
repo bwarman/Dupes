@@ -14,30 +14,62 @@ var groupThree = myWin.add("group", undefined, "Scale");
 var groupFour = myWin.add("group", undefined, "Duplicates");
     groupFour.add("staticText", [0,0, 50, 10], "Duplicates"); 
     var numDupes = groupFour.add("editText", [0,0,30,20], "0");
+    var parentLayer = groupFour.add("checkbox", undefined, "Parent to Selected?");
 var submitGroup = myWin.add("group", undefined, "");    
     var myButton = submitGroup.add("button", undefined, "Button");
 
 var xMove, yMove, zMove, Rot, Scale, dupes = 0;
 
 myButton.onClick = function(){
-    var selected = app.project.activeItem.selectedLayers[0];
-    if(selected != null){
-        xMove = parseFloat(posX.text);
-        yMove = parseFloat(posY.text);
-        zMove = parseFloat(posZ.text);
-        Rot = parseFloat(rot.text);
-        Scale = parseFloat(scale.text);
-        dupes = parseFloat(numDupes.text);
-        var newLayer = null;
-        for(i=1; i<=dupes; i++){
-            newLayer = selected.duplicate();
-            var layerIndex = selected.index;
-            //alert(layerIndex);
-            newLayer.moveBefore(selected);
-            loopKeys(newLayer);
+    var selectedLayers = app.project.activeItem.selectedLayers.length;
+    for(layers=0; layers<selectedLayers; layers++){
+        var selected = app.project.activeItem.selectedLayers[layers];
+        if(selected != null){
+            if(posX.text==""){
+                xMove = 0;
+            }else{
+                xMove = parseFloat(posX.text);
+            }
+            if(posY.text==""){
+                yMove = 0;
+            }else{
+                yMove = parseFloat(posY.text);
+            }
+            if(posZ.text==""){
+                zMove = 0;
+            }else{
+                zMove = parseFloat(posZ.text);
+            }
+            if(rot.text==""){
+                Rot = 0;
+            }else{
+                Rot = parseFloat(rot.text);
+            }
+            if(scale.text==""){
+                Scale = 0;
+            }else{
+                Scale = parseFloat(scale.text);
+            }
+            if(numDupes.text==""){
+                dupes = 0;
+            }else{
+                dupes = parseFloat(numDupes.text);
+            }
+            dupes = parseFloat(numDupes.text);
+            var newLayer = null;
+            for(i=1; i<=dupes; i++){
+                newLayer = selected.duplicate();
+                if(parentLayer.value == true){
+                    newLayer.parent = selected;
+                }
+                var layerIndex = selected.index;
+                //alert(layerIndex);
+                newLayer.moveBefore(selected);
+                loopKeys(newLayer);
+            }
+        }else{
+            alert("Please Select a Layer to Duplicate");
         }
-    }else{
-        alert("Please Select a Layer to Duplicate");
     }
 }
 function loopKeys(newLayer){

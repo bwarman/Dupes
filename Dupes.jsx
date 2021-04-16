@@ -28,7 +28,7 @@
         // ======
         var panel1 = DuplicatorWin.add("panel", undefined, undefined, {name: "panel1"}); 
         panel1.text = "Duplicates"; 
-        panel1.orientation = "row"; 
+        panel1.orientation = "column"; 
         panel1.alignChildren = ["fill","fill"]; 
         panel1.spacing = 10; 
         panel1.margins = 10;
@@ -36,6 +36,9 @@
         var numDupes = panel1.add('edittext {justify: "center", properties: {name: "numDupes"}}'); 
         numDupes.text = "0"; 
         numDupes.preferredSize.width = 100 ; 
+
+        var parentLayer = panel1.add("checkbox", undefined, undefined, {name: "parentLayer"}); 
+        parentLayer.text = "Parent to Selected"; 
 
         // GROUP1
         // ======
@@ -137,31 +140,60 @@
          } else {
             DuplicatorWin.layout.layout(true);
             DuplicatorWin.layout.resize();
-         }
-    
-         
-     
-     myButton.onClick = function(){
-         var selected = app.project.activeItem.selectedLayers[0];
-         if(selected != null){
-             xMove = parseFloat(posX.text);
-             yMove = parseFloat(posY.text);
-             zMove = parseFloat(posZ.text);
-             Rot = parseFloat(rot.text);
-             Scale = parseFloat(scale.text);
-             dupes = parseFloat(numDupes.text);
-             var newLayer = null;
-             for(i=1; i<=dupes; i++){
-                 newLayer = selected.duplicate();
-                 var layerIndex = selected.index;
-                 //alert(layerIndex);
-                 newLayer.moveBefore(selected);
-                 loopKeys(newLayer);
-             }
-         }else{
-             alert("Please Select a Layer to Duplicate");
-         }
-     }
+         }   
+// Click function
+         myButton.onClick = function(){
+            var selectedLayers = app.project.activeItem.selectedLayers.length;
+            for(layers=0; layers<selectedLayers; layers++){
+                var selected = app.project.activeItem.selectedLayers[layers];
+                if(selected != null){
+                    if(posX.text==""){
+                        xMove = 0;
+                    }else{
+                        xMove = parseFloat(posX.text);
+                    }
+                    if(posY.text==""){
+                        yMove = 0;
+                    }else{
+                        yMove = parseFloat(posY.text);
+                    }
+                    if(posZ.text==""){
+                        zMove = 0;
+                    }else{
+                        zMove = parseFloat(posZ.text);
+                    }
+                    if(rot.text==""){
+                        Rot = 0;
+                    }else{
+                        Rot = parseFloat(rot.text);
+                    }
+                    if(scale.text==""){
+                        Scale = 0;
+                    }else{
+                        Scale = parseFloat(scale.text);
+                    }
+                    if(numDupes.text==""){
+                        dupes = 0;
+                    }else{
+                        dupes = parseFloat(numDupes.text);
+                    }
+                    dupes = parseFloat(numDupes.text);
+                    var newLayer = null;
+                    for(i=1; i<=dupes; i++){
+                        newLayer = selected.duplicate();
+                        if(parentLayer.value == true){
+                            newLayer.parent = selected;
+                        }
+                        var layerIndex = selected.index;
+                        //alert(layerIndex);
+                        newLayer.moveBefore(selected);
+                        loopKeys(newLayer);
+                    }
+                }else{
+                    alert("Please Select a Layer to Duplicate");
+                }
+            }
+        }
     }
     
     // Write your helper functions here
@@ -169,7 +201,6 @@ function loopKeys(newLayer){
     //var origRot = newLayer.rotation.value;
     //Position Modifications
     if(newLayer.position.numKeys == 0){
-        alert("This is an alert!");
         var origPos = newLayer.position.value;
         //alert(origPos);
         newLayer.position.setValue([origPos[0]+(xMove*i),origPos[1]+(yMove*i), origPos[2]+(zMove*i)]);
