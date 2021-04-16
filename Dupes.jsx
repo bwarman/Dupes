@@ -143,6 +143,7 @@
          }   
 // Click function
          myButton.onClick = function(){
+            app.beginUndoGroup("Dupes");
             var selectedLayers = app.project.activeItem.selectedLayers.length;
             for(layers=0; layers<selectedLayers; layers++){
                 var selected = app.project.activeItem.selectedLayers[layers];
@@ -184,8 +185,6 @@
                         if(parentLayer.value == true){
                             newLayer.parent = selected;
                         }
-                        var layerIndex = selected.index;
-                        //alert(layerIndex);
                         newLayer.moveBefore(selected);
                         loopKeys(newLayer);
                     }
@@ -193,16 +192,15 @@
                     alert("Please Select a Layer to Duplicate");
                 }
             }
+            app.endUndoGroup();
         }
     }
     
     // Write your helper functions here
 function loopKeys(newLayer){
-    //var origRot = newLayer.rotation.value;
     //Position Modifications
     if(newLayer.position.numKeys == 0){
         var origPos = newLayer.position.value;
-        //alert(origPos);
         newLayer.position.setValue([origPos[0]+(xMove*i),origPos[1]+(yMove*i), origPos[2]+(zMove*i)]);
     }else{
         for(a=1; a<=newLayer.position.numKeys; a++){
@@ -215,7 +213,6 @@ function loopKeys(newLayer){
     if(Scale != 0){
         if(newLayer.scale.numKeys == 0){
             var origScale = newLayer.scale.value;
-            //alert(Math.pow((.01*Scale), i));
             newLayer.scale.setValue([origScale[0] * (Math.pow((.01*Scale), i)) , origScale[1] * (Math.pow((.01*Scale), i))]);
         }
         else{

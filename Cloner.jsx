@@ -21,6 +21,7 @@ var submitGroup = myWin.add("group", undefined, "");
 var xMove, yMove, zMove, Rot, Scale, dupes = 0;
 
 myButton.onClick = function(){
+    app.beginUndoGroup("Dupes");
     var selectedLayers = app.project.activeItem.selectedLayers.length;
     for(layers=0; layers<selectedLayers; layers++){
         var selected = app.project.activeItem.selectedLayers[layers];
@@ -71,6 +72,7 @@ myButton.onClick = function(){
             alert("Please Select a Layer to Duplicate");
         }
     }
+    app.endUndoGroup();
 }
 function loopKeys(newLayer){
     //var origRot = newLayer.rotation.value;
