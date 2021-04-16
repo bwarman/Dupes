@@ -31,6 +31,9 @@ myButton.onClick = function(){
         var newLayer = null;
         for(i=1; i<=dupes; i++){
             newLayer = selected.duplicate();
+            var layerIndex = selected.index;
+            //alert(layerIndex);
+            newLayer.moveBefore(selected);
             loopKeys(newLayer);
         }
     }else{
@@ -39,10 +42,11 @@ myButton.onClick = function(){
 }
 function loopKeys(newLayer){
     //var origRot = newLayer.rotation.value;
+    //Position Modifications
     if(newLayer.position.numKeys == 0){
         alert("This is an alert!");
         var origPos = newLayer.position.value;
-        alert(origPos);
+        //alert(origPos);
         newLayer.position.setValue([origPos[0]+(xMove*i),origPos[1]+(yMove*i), origPos[2]+(zMove*i)]);
     }else{
         for(a=1; a<=newLayer.position.numKeys; a++){
@@ -50,50 +54,34 @@ function loopKeys(newLayer){
             newLayer.position.setValueAtKey(a, [origPos[0]+(xMove*i),origPos[1]+(yMove*i), origPos[2]+(zMove*i)]);        
         }
     }
-    if(newLayer.scale.numKeys == 0){
-        var origScale = newLayer.scale.value;
-        //alert(Math.pow((.01*Scale), i));
-        newLayer.scale.setValue([origScale[0] * (Math.pow((.01*Scale), i)) , origScale[1] * (Math.pow((.01*Scale), i))]);
+    
+    //Scale Modifications
+    if(Scale != 0){
+        if(newLayer.scale.numKeys == 0){
+            var origScale = newLayer.scale.value;
+            //alert(Math.pow((.01*Scale), i));
+            newLayer.scale.setValue([origScale[0] * (Math.pow((.01*Scale), i)) , origScale[1] * (Math.pow((.01*Scale), i))]);
+        }
+        else{
+            for(b=1; b<= newLayer.scale.numKeys; b++){
+                var origScale = newLayer.scale.keyValue(b);
+                newScale = [origScale[0] * (Math.pow((.01*Scale), i)) , origScale[1] * (Math.pow((.01*Scale), i))];
+                newLayer.scale.setValueAtKey(b, newScale);        
+            }
+        }
+    }
+
+    //rotation keys
+    if(newLayer.rotation.numKeys == 0){
+        var origRot = newLayer.rotation.value;
+        newLayer.rotation.setValue(origRot + (Rot* i));
     }
     else{
-        for(b=1; b<= newLayer.scale.numKeys; b++){
-            var origScale = newLayer.scale.keyValue(b);
-            newScale = [origScale[0] * (Math.pow((.01*Scale), i)) , origScale[1] * (Math.pow((.01*Scale), i))];
-            newLayer.scale.setValueAtKey(b, newScale);        
+        for(c=1; c<= newLayer.rotation.numKeys; c++){
+            var origRot = newLayer.rotation.keyValue(c);
+            newLayer.rotation.setValueAtKey(c, origRot + (Rot * i));        
         }
     }
 }
 myWin.center();
 myWin.show();
-
-
-/*function positionMove(selected){
-    xMove = parseFloat(posX.text);
-    yMove = parseFloat(posY.text);
-    zMove = parseFloat(posZ.text);
-    Rot = parseFloat(rot.text);
-    Scale = parseFloat(scale.text);
-
-    for(var i=1; i<6; i++) {
-        // Get the first currently selected layer 
-        //duplicate the layer
-        var newLayer = selected.duplicate()
-        //get the index of the selected layer
-        //var selectedIndex = selected.index
-        //var newLayer = app.project.activeItem.layer(selectedIndex+1);
-        //get the position of the selected layer and store it in a variable
-        var oldPosition = newLayer.position.value;
-        var oldRotation = newLayer.rotation.value;
-        var oldScale = newLayer.scale.value;
-        //set the position of the newly created layer, which is one index below the current one, to add to the x position
-        newLayer.position.setValue([oldPosition[0]+xMove, oldPosition[1]+yMove, oldPosition[2]+zMove]);
-        newLayer.rotation.setValue(oldRotation+Rot);
-        newLayer.scale.setValue([oldScale[0] + Scale, oldScale[1] + Scale]);
-        xMove += parseFloat(posX.text);
-        yMove += parseFloat(posY.text);
-        zMove += parseFloat(posZ.text);
-        Rot += parseFloat(rot.text);
-        Scale += parseFloat(scale.text);
-    }
-}
-*/
