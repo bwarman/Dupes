@@ -6,13 +6,12 @@
     
     buildUI(thisObj); // Calling the function to build the panel
     
-    ‍
-    
+       
     function buildUI(thisObj) {
     
     var windowName = "Duplicator";
     
-      var DuplicatorWin = (thisObj instanceof Panel) ? thisObj : new Window("window", windowName, undefined, {
+      var DuplicatorWin = (thisObj instanceof Panel) ? thisObj : new Window("window", "Responsive UI", windowName, undefined, {
               resizeable: true
          });
     
@@ -24,26 +23,19 @@
         */ 
 
         // DUPLICATOR
-        // ==========
-        //var DuplicatorWin = new Window("dialog", undefined, undefined, {maximizeButton: true, minimizeButton: true, independent: true, resizeable: true}); 
-        DuplicatorWin.text = "Duplicator"; 
-        DuplicatorWin.orientation = "column"; 
-        DuplicatorWin.alignChildren = ["center","top"]; 
-        DuplicatorWin.spacing = 10; 
-        DuplicatorWin.margins = 16; 
 
         // PANEL1
         // ======
         var panel1 = DuplicatorWin.add("panel", undefined, undefined, {name: "panel1"}); 
         panel1.text = "Duplicates"; 
         panel1.orientation = "row"; 
-        panel1.alignChildren = ["center","center"]; 
+        panel1.alignChildren = ["fill","fill"]; 
         panel1.spacing = 10; 
-        panel1.margins = 10; 
+        panel1.margins = 10;
 
         var numDupes = panel1.add('edittext {justify: "center", properties: {name: "numDupes"}}'); 
         numDupes.text = "0"; 
-        numDupes.preferredSize.width = 35; 
+        numDupes.preferredSize.width = 100 ; 
 
         // GROUP1
         // ======
@@ -135,13 +127,8 @@
         myButton.text = "Duplicate"; 
         myButton.justify = "left"; 
 
-        //DuplicatorWin.show();
-
-
-
-          //End of UI
-    ‍
-            DuplicatorWin.onResizing = DuplicatorWin.onResize = function() {
+    //End of UI
+         DuplicatorWin.onResizing = DuplicatorWin.onResize = function() {
             this.layout.resize();
          };
          if (DuplicatorWin instanceof Window) {
