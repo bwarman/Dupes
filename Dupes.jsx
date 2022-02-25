@@ -6,7 +6,7 @@
     
     buildUI(thisObj); // Calling the function to build the panel
     
-       
+
     function buildUI(thisObj) {
     
     var windowName = "Duplicator";
