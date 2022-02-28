@@ -36,9 +36,12 @@
         var numDupes = panel1.add('edittext {justify: "center", properties: {name: "numDupes"}}'); 
         numDupes.text = "0"; 
         numDupes.preferredSize.width = 100 ; 
-
+        //Parent to Layer Checkbox
         var parentLayer = panel1.add("checkbox", undefined, undefined, {name: "parentLayer"}); 
         parentLayer.text = "Parent to Selected"; 
+        //Parent to Null Checkbox
+        var parentNull = panel1.add("checkbox", undefined, undefined, {name: "parentNull"}); 
+        parentNull.text = "Parent to Null"; 
 
         // GROUP1
         // ======
@@ -146,11 +149,12 @@ myButton.onClick = function(){
     app.beginUndoGroup("Dupes");
     //get length of array of selected layers
     var layersSelected = app.project.activeItem.selectedLayers.length;
-    //get index of first selected layer in array
-    var selectedIndex = app.project.activeItem.selectedLayers[0].index;
-    if(layersSelected == 1){
+    if(layersSelected > 0){
         for(layers=0; layers<layersSelected; layers++){
+            //get selected layer in loop
             var selected = app.project.activeItem.selectedLayers[layers];
+            //get selected layer index in loop
+            var selectedIndex = app.project.activeItem.selectedLayers[layers].index;
             if(posX.text==""){
                 xMove = 0;
             }else{
@@ -193,12 +197,12 @@ myButton.onClick = function(){
                 loopKeys(newLayer, i);
             }
             //Move selected layer to the top of the duplicates
-            app.project.activeItem.selectedLayers[0].moveBefore(app.project.activeItem.layer(selectedIndex));
+            app.project.activeItem.selectedLayers[layers].moveBefore(app.project.activeItem.layer(selectedIndex));
             
         }
     
     }else{
-        alert("Please select a single layer to duplicate!");
+        alert("Please select layer/layers to duplicate!");
     }
     app.endUndoGroup();
 }

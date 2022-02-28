@@ -22,13 +22,11 @@ var xMove, yMove, zMove, Rot, Scale, dupes = 0;
 
 myButton.onClick = function(){
     app.beginUndoGroup("Dupes");
-    //get length of array of selected layers
-    var layersSelected = app.project.activeItem.selectedLayers.length;
-    //get index of first selected layer in array
-    var selectedIndex = app.project.activeItem.selectedLayers[0].index;
-    if(layersSelected == 1){
-        for(layers=0; layers<layersSelected; layers++){
-            var selected = app.project.activeItem.selectedLayers[layers];
+    var selectedLayers = app.project.activeItem.selectedLayers.length;
+    alert(selectedLayers);
+    for(layers=0; layers<selectedLayers; layers++){
+        var selected = app.project.activeItem.selectedLayers[layers];
+        if(selected != null){
             if(posX.text==""){
                 xMove = 0;
             }else{
@@ -66,59 +64,25 @@ myButton.onClick = function(){
                 if(parentLayer.value == true){
                     newLayer.parent = selected;
                 }
-            //Move layer to before selected layer
+                var layerIndex = selected.index;
+                //alert(layerIndex);
                 newLayer.moveBefore(selected);
-                loopKeys(newLayer, i);
+                loopKeys(newLayer);
             }
-            //Move selected layer to the top of the duplicates
-            app.project.activeItem.selectedLayers[0].moveBefore(app.project.activeItem.layer(selectedIndex));
-            
+        }else{
+            alert("Please Select a Layer to Duplicate");
         }
-    
-    }else{
-        alert("Please select a single layer to duplicate!");
     }
     app.endUndoGroup();
 }
-function loopKeys(newLayer, i){
+function loopKeys(newLayer){
+    alert("In the loop function!");
+    //var origRot = newLayer.rotation.value;
     //Position Modifications
-    //Check if dimensions are separated
-    if(newLayer.position.dimensionsSeparated){
-        //X dimensions
-        if(newLayer.position.getSeparationFollower(0).numKeys <= 0){
-            var origXPos = newLayer.position.getSeparationFollower(0).value;
-            newLayer.position.getSeparationFollower(0).setValue(origXPos + (xMove*i));
-         }else{
-             for(a=1; a<=newLayer.position.getSeparationFollower(0).numKeys; a++){
-                 var origXPos = newLayer.position.getSeparationFollower(0).keyValue(a);
-                 newLayer.position.getSeparationFollower(0).setValueAtKey(a, origXPos+(xMove*i));        
-             }
-         }
-         //Y dimensions
-         if(newLayer.position.getSeparationFollower(1).numKeys <= 0){
-            var origYPos = newLayer.position.getSeparationFollower(1).value;
-            newLayer.position.getSeparationFollower(1).setValue(origYPos + (yMove*i));
-         }else{
-             for(a=1; a<=newLayer.position.getSeparationFollower(1).numKeys; a++){
-                 var origYPos = newLayer.position.getSeparationFollower(1).keyValue(a);
-                 newLayer.position.getSeparationFollower(1).setValueAtKey(a, origYPos+(yMove*i));        
-             }
-         }
-        //Z dimensions
-        if(newLayer.threeDLayer){
-            if(newLayer.position.getSeparationFollower(2).numKeys <= 0){
-                var origZPos = newLayer.position.getSeparationFollower(2).value;
-                newLayer.position.getSeparationFollower(2).setValue(origZPos + (zMove*i));
-            }else{
-                for(a=1; a<=newLayer.position.getSeparationFollower(2).numKeys; a++){
-                    var origYPos = newLayer.position.getSeparationFollower(2).keyValue(a);
-                    newLayer.position.getSeparationFollower(2).setValueAtKey(a, origYPos+(yMove*i));         
-                }
-            }
-        }
-    }
-    else if(newLayer.position.numKeys <= 0){
+    if(newLayer.position.numKeys == 0){
+        alert("Numkeys = " + newLayer.position.numKeys);
         var origPos = newLayer.position.value;
+        //alert(origPos);
         newLayer.position.setValue([origPos[0]+(xMove*i),origPos[1]+(yMove*i), origPos[2]+(zMove*i)]);
     }else{
         for(a=1; a<=newLayer.position.numKeys; a++){
@@ -143,7 +107,7 @@ function loopKeys(newLayer, i){
         }
     }
 
-    //Rotation Modifications
+    //rotation keys
     if(newLayer.rotation.numKeys == 0){
         var origRot = newLayer.rotation.value;
         newLayer.rotation.setValue(origRot + (Rot* i));
