@@ -22,6 +22,10 @@ var submitGroup = myWin.add("group", undefined, "");
 var xMove, yMove, zMove, Rot, Scale, dupes = 0;
 
 myButton.onClick = function(){
+     if(parentNull.value == true && parentLayer.value == true){
+        alert("Only select one parenting option");
+        return;
+    }
     app.beginUndoGroup("Dupes");
     //get length of array of selected layers
     var layersSelected = app.project.activeItem.selectedLayers.length;

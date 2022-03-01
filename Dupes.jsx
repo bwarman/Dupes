@@ -40,8 +40,8 @@
         var parentLayer = panel1.add("checkbox", undefined, undefined, {name: "parentLayer"}); 
         parentLayer.text = "Parent to Selected"; 
         //Parent to Null Checkbox
-        //var parentNull = panel1.add("checkbox", undefined, undefined, {name: "parentNull"}); 
-        //parentNull.text = "Parent to Null"; 
+        var parentNull = panel1.add("checkbox", undefined, undefined, {name: "parentNull"}); 
+        parentNull.text = "Parent to Null"; 
 
         // GROUP1
         // ======
@@ -146,9 +146,26 @@
          }   
 // Click function
 myButton.onClick = function(){
+    if(parentNull.value == true && parentLayer.value == true){
+        alert("Only select one parenting option");
+        return;
+    }
     app.beginUndoGroup("Dupes");
     //get length of array of selected layers
     var layersSelected = app.project.activeItem.selectedLayers.length;
+    //check if parented to null
+    if (parentNull.value == true){
+        //get selected layers and store in variable
+        var theSelectedLayers = app.project.activeItem.selectedLayers;
+        //add null item
+        var parentNullItem = app.project.activeItem.layers.addNull();
+        //deselected null item
+        app.project.activeItem.selectedLayers[0].selected = false;
+        //go through theSelectedLayers array and select each previously selected layer
+        for(i=0; i<theSelectedLayers.length; i++){
+            theSelectedLayers[i].selected = true;            
+        }
+    }
     if(layersSelected > 0){
         for(layers=0; layers<layersSelected; layers++){
             //get selected layer in loop
@@ -189,8 +206,13 @@ myButton.onClick = function(){
             var newLayer = null;
             for(i=1; i<=dupes; i++){
                 newLayer = selected.duplicate();
+                //check if layer should be parented to duplicated layer
                 if(parentLayer.value == true){
                     newLayer.parent = selected;
+                }
+                //check if layer shoudl be parented to null
+                if(parentNull.value == true){
+                   newLayer.parent = parentNullItem;
                 }
             //Move layer to before selected layer
                 newLayer.moveBefore(selected);
