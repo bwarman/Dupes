@@ -40,8 +40,8 @@
         var parentLayer = panel1.add("checkbox", undefined, undefined, {name: "parentLayer"}); 
         parentLayer.text = "Parent to Selected"; 
         //Parent to Null Checkbox
-        var parentNull = panel1.add("checkbox", undefined, undefined, {name: "parentNull"}); 
-        parentNull.text = "Parent to Null"; 
+        //var parentNull = panel1.add("checkbox", undefined, undefined, {name: "parentNull"}); 
+        //parentNull.text = "Parent to Null"; 
 
         // GROUP1
         // ======
