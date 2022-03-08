@@ -22,7 +22,7 @@ var submitGroup = myWin.add("group", undefined, "");
 var xMove, yMove, zMove, Rot, Scale, dupes = 0;
 
 myButton.onClick = function(){
-     if(parentNull.value == true && parentLayer.value == true){
+    if(parentNull.value == true && parentLayer.value == true){
         alert("Only select one parenting option");
         return;
     }
@@ -90,13 +90,18 @@ myButton.onClick = function(){
                  if(parentNull.value == true){
                     newLayer.parent = parentNullItem;
                 }
-            //Move layer to before selected layer
+                //Move layer to before selected layer
                 newLayer.moveBefore(selected);
                 loopKeys(newLayer, i);
             }
             //Move selected layer to the top of the duplicates
             app.project.activeItem.selectedLayers[layers].moveBefore(app.project.activeItem.layer(selectedIndex));
-            
+            //SELECT ALL DUPLICATED LAYERS
+
+            for(i=selectedIndex; i<=(selectedIndex+dupes); i++){
+                app.project.activeItem.layer(i).selected = true
+            }
+            //END OF SELECTING ALL DUPLICATED LAYERS
         }
     
     }else{
