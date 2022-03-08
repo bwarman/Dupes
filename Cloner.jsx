@@ -86,10 +86,6 @@ myButton.onClick = function(){
                 if(parentLayer.value == true){
                     newLayer.parent = selected;
                 }
-                //check if layer shoudl be parented to null
-{/*                  if(parentNull.value == true){
-                    newLayer.parent = parentNullItem;
-                } */}
                 //Move layer to before selected layer
                 newLayer.moveBefore(selected);
                 loopKeys(newLayer, i);

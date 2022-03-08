@@ -154,7 +154,7 @@ myButton.onClick = function(){
     //get length of array of selected layers
     var layersSelected = app.project.activeItem.selectedLayers.length;
     //check if parented to null
-    if (parentNull.value == true){
+{/*     if (parentNull.value == true){
         //get selected layers and store in variable
         var theSelectedLayers = app.project.activeItem.selectedLayers;
         //add null item
@@ -165,7 +165,7 @@ myButton.onClick = function(){
         for(i=0; i<theSelectedLayers.length; i++){
             theSelectedLayers[i].selected = true;            
         }
-    }
+    } */}
     if(layersSelected > 0){
         for(layers=0; layers<layersSelected; layers++){
             //get selected layer in loop
@@ -210,19 +210,46 @@ myButton.onClick = function(){
                 if(parentLayer.value == true){
                     newLayer.parent = selected;
                 }
-                //check if layer shoudl be parented to null
-                if(parentNull.value == true){
-                   newLayer.parent = parentNullItem;
-                }
             //Move layer to before selected layer
                 newLayer.moveBefore(selected);
                 loopKeys(newLayer, i);
             }
             //Move selected layer to the top of the duplicates
             app.project.activeItem.selectedLayers[layers].moveBefore(app.project.activeItem.layer(selectedIndex));
-            
+            //SELECT ALL DUPLICATED LAYERS
+
+            for(i=selectedIndex; i<=(selectedIndex+dupes); i++){
+                app.project.activeItem.layer(i).selected = true
+            }
+            //END OF SELECTING ALL DUPLICATED LAYERS
         }
-    
+        if (parentNull.value == true){
+        mySelectedLayers=app.project.activeItem.selectedLayers;
+		//check there are selected layers to avoid divide-by-zero error
+		if (mySelectedLayers.length){
+			var totalPos=[0,0,0];
+			var avgPos;
+			
+			//Find Average Postion of selected layers
+			for(var i=0;i<mySelectedLayers.length;i++){
+				totalPos+=mySelectedLayers[i].property("Transform").property("Position").value;
+			}
+
+			avgPos = totalPos/mySelectedLayers.length;
+
+			// Create null using new avg positions.
+			var myNull=app.project.activeItem.layers.addNull();
+			myNull.name="Dupes Null";
+			myNull.property("Transform").property("Anchor Point").setValue([50,50,0]);
+			myNull.property("Transform").property("Position").setValue(avgPos);
+
+			//Parent selected layers to new null
+			for(var k=0;k<mySelectedLayers.length;k++){
+
+				mySelectedLayers[k].parent=myNull;
+			}
+		}
+       }    
     }else{
         alert("Please select layer/layers to duplicate!");
     }
